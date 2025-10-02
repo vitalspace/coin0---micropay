@@ -1,0 +1,44 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-check --tsconfig ./tsconfig.app.json && tsc -p tsconfig.node.json"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^6.2.0",
+    "@tsconfig/svelte": "^5.0.5",
+    "svelte": "^5.38.10",
+    "svelte-check": "^4.3.1",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.6"
+  },
+  "dependencies": {
+    "@aptos-labs/ts-sdk": "^5.1.0",
+    "@aptos-labs/wallet-standard": "^0.5.2",
+    "@dimforge/rapier3d-compat": "^0.19.0",
+    "@tailwindcss/vite": "^4.1.13",
+    "@theatre/core": "^0.7.2",
+    "@theatre/studio": "^0.7.2",
+    "@threlte/core": "^8.1.5",
+    "@threlte/extras": "^9.5.4",
+    "@threlte/flex": "^2.0.6",
+    "@threlte/rapier": "^3.1.5",
+    "@threlte/studio": "^0.1.9",
+    "@threlte/theatre": "^3.0.7",
+    "@types/three": "^0.180.0",
+    "axios": "^1.12.2",
+    "chart.js": "^4.5.0",
+    "lucide-svelte": "^0.544.0",
+    "path": "^0.12.7",
+    "prettier-plugin-svelte": "^3.4.0",
+    "svelte5-router": "^3.0.2",
+    "tailwindcss": "^4.1.13",
+    "three": "^0.180.0",
+    "zod": "^4.1.11"
+  }
+}

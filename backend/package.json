@@ -1,0 +1,21 @@
+{
+  "name": "backend",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "bun test",
+    "test:watch": "bun test --watch",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^1.4.0",
+    "elysia": "latest",
+    "mongoose": "^8.18.2",
+    "ethers": "^6.8.1",
+    "@aptos-labs/ts-sdk": "^1.21.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "@types/bun": "latest"
+  },
+  "module": "src/index.js"
+}

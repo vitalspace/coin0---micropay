@@ -1,0 +1,16 @@
+[package]
+name = "campaigns_v3"
+version = "1.0.0"
+authors = []
+
+[addresses]
+campaign_blockchain = "6800459b7d152eaa62c9ceaf2cf7b1b5f45e68a18cb2cd462c00b079f65d9dad"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
