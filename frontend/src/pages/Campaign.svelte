@@ -440,9 +440,9 @@
               {#if campaign.type === "donation"}
                 <div class="space-y-4">
                   <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    <span class="block text-sm font-semibold text-gray-700 mb-2">
                       Donation Amount (APT)
-                    </label>
+                    </span>
                     <input
                       type="number"
                       bind:value={donationAmount}
@@ -471,9 +471,9 @@
                 <div class="space-y-4">
                   <div class="grid grid-cols-2 gap-4">
                     <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
+                      <span class="block text-sm font-semibold text-gray-700 mb-2">
                         Quantity
-                      </label>
+                      </span>
                       <input
                         type="number"
                         bind:value={productQuantity}
@@ -483,9 +483,9 @@
                       />
                     </div>
                     <div>
-                      <label class="block text-sm font-semibold text-gray-700 mb-2">
+                      <span class="block text-sm font-semibold text-gray-700 mb-2">
                         Total Cost
-                      </label>
+                      </span>
                       <div class="w-full px-4 py-3 bg-purple-50/50 border border-purple-100 rounded-xl font-bold bg-gradient-to-br from-purple-600 to-indigo-600 bg-clip-text text-transparent">
                         {(productQuantity * (campaign.price || 0)).toFixed(2)} APT
                       </div>
