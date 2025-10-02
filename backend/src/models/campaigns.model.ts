@@ -11,6 +11,8 @@ interface ICampaign extends Document {
   contractId?: number; // Blockchain campaign ID
   transaction_hash?: string; // Blockchain transaction hash for campaign creation
   isActive: boolean;
+  totalRaised: number; // Total amount raised in APT
+  supporterCount: number; // Number of unique supporters
   createdBy: ObjectId;
   createdAt: Date;
   updatedAt: Date;
@@ -40,6 +42,8 @@ const CampaignSchema: Schema = new Schema(
     contractId: { type: Number }, // Blockchain campaign ID
     transaction_hash: { type: String }, // Blockchain transaction hash for campaign creation
     isActive: { type: Boolean, required: true, default: true },
+    totalRaised: { type: Number, required: true, default: 0 },
+    supporterCount: { type: Number, required: true, default: 0 },
     createdBy: { type: Schema.Types.ObjectId, required: true, ref: "User" },
   },
   { timestamps: true }

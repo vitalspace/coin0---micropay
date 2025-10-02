@@ -24,4 +24,5 @@ export interface IMemoData {
   user_address: string;
   memo: string;
   type: 'donation' | 'purchase';
+  amount: number; // Amount in octas
 }

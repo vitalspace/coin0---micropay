@@ -66,6 +66,7 @@ export const campaignRoutes = new Elysia({
         minLength: 1,
         maxLength: 100,
       }),
+      amount: t.Number(),
     }),
   })
   .get("/api/v1/campaign/:id", getCampaignById, {
@@ -82,13 +83,11 @@ export const campaignRoutes = new Elysia({
       ),
     }),
   })
-  .get("/api/v1/user/:userId/campaigns", getUserCampaigns, {
-    params: t.Object({
-      userId: t.String({
-        minLength: 24, // MongoDB ObjectId length
-      }),
-    }),
+  .get("/api/v1/user/campaigns", getUserCampaigns, {
     query: t.Object({
+      address: t.String({
+        minLength: 1,
+      }),
       page: t.Optional(t.String()),
       limit: t.Optional(t.String()),
       type: t.Optional(

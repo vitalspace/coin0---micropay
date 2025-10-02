@@ -130,8 +130,8 @@
 
         <div class="flex items-center justify-between text-xs">
           <span class="text-gray-500/90 truncate">
-            {campaign.donorCount}
-            {campaign.donorCount === 1 ? "supporter" : "supporters"}
+            {campaign.supporterCount}
+            {campaign.supporterCount === 1 ? "supporter" : "supporters"}
           </span>
           <span class="font-medium text-purple-600 flex-shrink-0 ml-2">
             {((campaign.totalRaised / campaign.goal) * 100).toFixed(0)}% of {campaign.goal.toFixed(
@@ -142,8 +142,8 @@
       </div>
     {:else}
       <div class="text-xs text-gray-500/90">
-        {campaign.donorCount}
-        {campaign.donorCount === 1 ? "supporter" : "supporters"}
+        {campaign.supporterCount}
+        {campaign.supporterCount === 1 ? "supporter" : "supporters"}
       </div>
     {/if}
 

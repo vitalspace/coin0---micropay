@@ -1,16 +1,9 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Campaign } from "@/types/types";
-  import { useContract } from "@/hooks/useContract";
   import { useWallet } from "@/hooks/useWallet";
   import CampaignList from "@/components/ui/CampaignCard.svelte";
-
-  const {
-    getAllCampaigns,
-    getCampaignBalance,
-    getDonationHistory,
-    getPurchaseHistory,
-  } = useContract();
+  import { getUserCampaigns } from "@/services/api.services";
   const { address } = useWallet();
 
   let campaigns: Campaign[] = [];
@@ -27,79 +20,34 @@
       loading = true;
       error = null;
 
-      const allCampaigns = await getAllCampaigns($address);
+      const response = await getUserCampaigns($address);
+      const dbCampaigns = response.data.campaigns;
 
-      console.log("Fetched campaigns:", allCampaigns);
+      console.log("Fetched campaigns from DB:", dbCampaigns);
 
-      const campaignPromises = allCampaigns.map(async (campaignData) => {
-        const {
-          id,
-          campaign_type,
-          name,
-          description,
-          goal,
-          price,
-          image,
-          is_active,
-          created_by,
-          created_at,
-          updated_at,
-        } = campaignData;
-
-        // Convert values to numbers
-        const goalNum = Number(goal);
-        const priceNum = Number(price);
-        const campaignIdNum = Number(id);
-
-        const balance = await getCampaignBalance($address, campaignIdNum);
-        const donations = await getDonationHistory($address, campaignIdNum);
-        const purchases = await getPurchaseHistory($address, campaignIdNum);
-
-        const totalRaised =
-          donations.reduce(
-            (sum, d) =>
-              sum +
-              (typeof d.amount === "string"
-                ? parseInt(d.amount)
-                : Number(d.amount)),
-            0
-          ) +
-          purchases.reduce(
-            (sum, p) =>
-              sum +
-              (typeof p.total_amount === "string"
-                ? parseInt(p.total_amount)
-                : Number(p.total_amount)),
-            0
-          );
-
-        const donorCount = new Set([
-          ...donations.map((d) => d.donor),
-          ...purchases.map((p) => p.buyer),
-        ]).size;
+      campaigns = dbCampaigns.map((dbCampaign: any) => {
+        const campaignIdNum = Number(dbCampaign.contractId);
 
         const campaign: Campaign = {
           id: campaignIdNum.toString(),
-          type: typeMap[campaign_type] || "donation",
-          title: name,
-          description,
-          goal: goalNum > 0 ? goalNum / OCTAS_TO_APT : undefined,
-          price: priceNum > 0 ? priceNum / OCTAS_TO_APT : undefined,
-          image: image || undefined,
-          paymentLink: `https://app.example.com/pay/${$address}/${campaignIdNum}`,
-          balance: Number(balance) / OCTAS_TO_APT,
-          totalRaised: totalRaised / OCTAS_TO_APT,
-          donorCount,
-          isActive: is_active,
-          createdBy: created_by,
-          createdAt: new Date(created_at),
-          updatedAt: new Date(updated_at),
+          type: dbCampaign.type,
+          title: dbCampaign.name,
+          description: dbCampaign.description,
+          goal: dbCampaign.goal > 0 ? dbCampaign.goal : undefined,
+          price: dbCampaign.price > 0 ? dbCampaign.price : undefined,
+          image: dbCampaign.image || undefined,
+          paymentLink: `https://app.example.com/pay/${dbCampaign.createdBy?.address || ""}/${campaignIdNum}`,
+          balance: dbCampaign.totalRaised, // Use totalRaised as balance approximation
+          totalRaised: dbCampaign.totalRaised,
+          supporterCount: dbCampaign.supporterCount,
+          isActive: dbCampaign.isActive,
+          createdBy: dbCampaign.createdBy?.address || "",
+          createdAt: new Date(dbCampaign.createdAt),
+          updatedAt: new Date(dbCampaign.updatedAt),
         };
 
         return campaign;
       });
-
-      campaigns = await Promise.all(campaignPromises);
     } catch (err) {
       console.error("Error loading campaigns:", err);
       error = "Failed to load campaigns";

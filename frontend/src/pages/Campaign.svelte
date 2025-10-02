@@ -184,6 +184,7 @@
             user_address: $address || "",
             memo: donationMemo.trim(),
             type: "donation",
+            amount: amountInOctas,
           });
         } catch (memoError) {
           console.error("Error creating memo:", memoError);
@@ -266,6 +267,7 @@
       // Create memo if provided
       if (purchaseMemo.trim()) {
         try {
+          const purchaseAmount = (campaign.price || 0) * productQuantity * OCTAS_TO_APT;
           await createMemo({
             transaction_hash: response.hash,
             creator_address: creatorAddress,
@@ -273,6 +275,7 @@
             user_address: $address || "",
             memo: purchaseMemo.trim(),
             type: "purchase",
+            amount: purchaseAmount,
           });
         } catch (memoError) {
           console.error("Error creating memo:", memoError);
@@ -344,6 +347,7 @@
       // Create memo if provided
       if (purchaseMemo.trim()) {
         try {
+          const purchaseAmount = (campaign.price || 0) * OCTAS_TO_APT;
           await createMemo({
             contractId: campaignId,
             creator_address: creatorAddress,
@@ -351,6 +355,7 @@
             transaction_hash: response.hash,
             type: "purchase",
             user_address: $address || "",
+            amount: purchaseAmount,
           });
         } catch (memoError) {
           console.error("Error creating memo:", memoError);
@@ -971,7 +976,7 @@
                       </span>
                     </div>
                     <p class="text-purple-700 text-sm">
-                      Purchase this business service to support the campaign.
+                        Purchase this professional service offered by the business. Your payment goes directly to the provider.
                     </p>
                   </div>
                   <div>

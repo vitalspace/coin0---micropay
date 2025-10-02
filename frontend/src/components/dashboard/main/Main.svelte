@@ -7,9 +7,10 @@
   import { useContract } from "@/hooks/useContract";
   import { activeTab } from "@/stores/stores";
   import type { Campaign } from "@/types/types";
+  import { getUserCampaigns } from "@/services/api.services";
 
   const { address } = useWallet();
-  const { getAllCampaigns, getCampaignBalance, getDonationHistory, getPurchaseHistory, getActiveCampaigns, getTotalBalance } = useContract();
+  const { getActiveCampaigns, getTotalBalance } = useContract();
 
   let campaigns: Campaign[] = $state([]);
   let activeCampaigns: number[] = $state([]);
@@ -25,45 +26,32 @@
     if (!userAddress) return;
 
     try {
-      const allCampaignsData = await getAllCampaigns(userAddress);
+      const response = await getUserCampaigns(userAddress);
+      const dbCampaigns = response.data.campaigns;
 
-      const campaignPromises = allCampaignsData.map(async (campaignData) => {
-        const { id, campaign_type, name, description, goal, price, image, is_active, created_by, created_at, updated_at } = campaignData;
-
-        const goalNum = Number(goal);
-        const priceNum = Number(price);
-        const campaignIdNum = Number(id);
-
-        const balance = await getCampaignBalance(userAddress, campaignIdNum);
-        const donations = await getDonationHistory(userAddress, campaignIdNum);
-        const purchases = await getPurchaseHistory(userAddress, campaignIdNum);
-
-        const totalRaised = donations.reduce((sum, d) => sum + Number(d.amount), 0) + purchases.reduce((sum, p) => sum + Number(p.total_amount), 0);
-
-        const donorCount = new Set([...donations.map(d => d.donor), ...purchases.map(p => p.buyer)]).size;
+      campaigns = dbCampaigns.map((dbCampaign: any) => {
+        const campaignIdNum = Number(dbCampaign.contractId);
 
         const campaign: Campaign = {
           id: campaignIdNum.toString(),
-          type: typeMap[campaign_type] || "donation",
-          title: name,
-          description,
-          goal: goalNum > 0 ? goalNum / OCTAS_TO_APT : undefined,
-          price: priceNum > 0 ? priceNum / OCTAS_TO_APT : undefined,
-          image: image || undefined,
-          paymentLink: `https://app.example.com/pay/${userAddress}/${campaignIdNum}`,
-          balance: Number(balance) / OCTAS_TO_APT,
-          totalRaised: totalRaised / OCTAS_TO_APT,
-          donorCount,
-          isActive: is_active,
-          createdBy: created_by,
-          createdAt: new Date(created_at),
-          updatedAt: new Date(updated_at),
+          type: dbCampaign.type,
+          title: dbCampaign.name,
+          description: dbCampaign.description,
+          goal: dbCampaign.goal > 0 ? dbCampaign.goal : undefined,
+          price: dbCampaign.price > 0 ? dbCampaign.price : undefined,
+          image: dbCampaign.image || undefined,
+          paymentLink: `https://app.example.com/pay/${dbCampaign.createdBy?.address || ""}/${campaignIdNum}`,
+          balance: dbCampaign.totalRaised, // Use totalRaised as balance approximation
+          totalRaised: dbCampaign.totalRaised,
+          supporterCount: dbCampaign.supporterCount,
+          isActive: dbCampaign.isActive,
+          createdBy: dbCampaign.createdBy?.address || "",
+          createdAt: new Date(dbCampaign.createdAt),
+          updatedAt: new Date(dbCampaign.updatedAt),
         };
 
         return campaign;
       });
-
-      campaigns = await Promise.all(campaignPromises);
     } catch (err) {
       console.error(err);
     } finally {
@@ -98,7 +86,7 @@
     <Card
       icon={Users}
       title="Total Supporters"
-      description="You have {campaigns.reduce((sum, c) => sum + c.donorCount, 0)} supporters who have contributed to your campaigns."
+      description="You have {campaigns.reduce((sum, c) => sum + c.supporterCount, 0)} supporters who have contributed to your campaigns."
       action=""
     />
 

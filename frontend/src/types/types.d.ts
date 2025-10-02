@@ -48,7 +48,7 @@ export interface Campaign {
   paymentLink: string;
   balance: number;
   totalRaised: number;
-  donorCount: number;
+  supporterCount: number;
   isActive: boolean;
   createdBy?: string;
   createdAt: Date;

@@ -24,7 +24,7 @@ export const getCampaignById = async (id: string, userId?: string) => {
 };
 
 export const getUserCampaigns = async (
-  userId: string,
+  address: string,
   params?: {
     page?: number;
     limit?: number;
@@ -32,7 +32,9 @@ export const getUserCampaigns = async (
     isActive?: boolean;
   }
 ) => {
-  return await axios.get(`/api/v1/user/${userId}/campaigns`, { params });
+  return await axios.get('/api/v1/user/campaigns', {
+    params: { address, ...params }
+  });
 };
 
 export const getAllCampaigns = async (

@@ -142,7 +142,7 @@ export const getAllCampaigns = async (ctx: Context) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limitNum)
-        .populate("createdBy", "nickname avatar"),
+        .populate("createdBy", "nickname avatar address"),
       Campaign.countDocuments(filter),
     ]);
 
@@ -169,22 +169,30 @@ export const getAllCampaigns = async (ctx: Context) => {
 
 export const getUserCampaigns = async (ctx: Context) => {
   try {
-    const { userId } = ctx.params as { userId: string };
+    const { address } = ctx.query as { address: string };
     const {
       page = 1,
       limit = 10,
       type,
       isActive,
     } = ctx.query as {
+      address: string;
       page?: string;
       limit?: string;
       type?: string;
       isActive?: string;
     };
 
-    if (!userId) {
+    if (!address) {
       ctx.set.status = 400;
-      return { message: "User ID is required" };
+      return { message: "User address is required" };
+    }
+
+    // Find user by address
+    const user = await User.findOne({ address });
+    if (!user) {
+      ctx.set.status = 404;
+      return { message: "User not found" };
     }
 
     const pageNum = typeof page === "string" ? parseInt(page, 10) : page;
@@ -196,7 +204,7 @@ export const getUserCampaigns = async (ctx: Context) => {
     }
 
     // Build filter
-    const filter: any = { createdBy: userId };
+    const filter: any = { createdBy: user._id };
 
     if (type && ["donation", "business", "product"].includes(type)) {
       filter.type = type;
@@ -213,7 +221,7 @@ export const getUserCampaigns = async (ctx: Context) => {
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limitNum)
-        .populate("createdBy", "nickname avatar"),
+        .populate("createdBy", "nickname avatar address"),
       Campaign.countDocuments(filter),
     ]);
 
@@ -331,6 +339,7 @@ export const createMemo = async (ctx: Context) => {
       transaction_hash,
       type,
       user_address,
+      amount,
     } = ctx.body as IMemoData;
 
 
@@ -340,7 +349,8 @@ export const createMemo = async (ctx: Context) => {
       !memo ||
       !transaction_hash ||
       !user_address ||
-      !type
+      !type ||
+      amount === undefined
     ) {
       ctx.set.status = 400;
       return { message: "Missing required fields" };
@@ -373,6 +383,12 @@ export const createMemo = async (ctx: Context) => {
       return { message: "Memo with this transaction_hash already exists" };
     }
 
+    // Check if this user has already supported this campaign
+    const existingSupporter = await Memo.findOne({
+      campaign_id: campaign.contractId,
+      user_address,
+    });
+
     const newMemo = new Memo({
       campaign_id: Number(campaign.contractId),
       creator_address,
@@ -382,6 +398,18 @@ export const createMemo = async (ctx: Context) => {
       user_address,
     });
     await newMemo.save();
+
+    // Update campaign stats
+    const amountInApt = amount / 100000000; // Convert octas to APT
+    campaign.totalRaised += amountInApt;
+
+    // Only increment supporterCount if this is the first support from this user
+    if (!existingSupporter) {
+      campaign.supporterCount += 1;
+    }
+
+    await campaign.save();
+
     ctx.set.status = 201;
     return { message: "Memo created successfully", memo: newMemo };
   } catch (error) {
