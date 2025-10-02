@@ -10,12 +10,10 @@
     useWallet();
 
   onMount(() => {
-    // Any additional setup can go here
-
     if ($isConnected) {
       console.log("Wallet is connected with address:", $address);
     } else {
-      console.log("Wallet is not connected");
+      // console.log("Wallet is not connected");
     }
   });
 
@@ -147,8 +145,60 @@
 
       <div class="flex space-x-4">
         {#if $isConnected}
-          <div class="text-sm text-gray-400 mb-2">
-            Connected: {$address.slice(0, 6)}...{$address.slice(-4)}
+          <div class="w-full">
+            <a
+              href="/dashboard"
+              class="
+    group relative w-full h-12 overflow-hidden
+    bg-gradient-to-r from-pink-500/40 via-purple-500/40 to-cyan-500/40
+    hover:from-pink-400/50 hover:via-purple-400/50 hover:to-cyan-400/50
+    backdrop-blur-lg
+    rounded-2xl border-2
+    border-pink-400/50 hover:border-pink-300/70
+    text-white font-bold text-sm
+    cursor-pointer
+    transform hover:scale-[1.04] hover:-translate-y-1.5
+    transition-all duration-300 ease-out
+    shadow-2xl shadow-pink-500/50 hover:shadow-pink-400/70
+    hover:shadow-3xl
+    animate-pulse hover:animate-none
+    before:absolute before:inset-0 before:rounded-2xl
+    before:bg-gradient-to-r before:from-pink-500/50 before:via-purple-500/50 before:to-cyan-500/50
+    before:opacity-0 hover:before:opacity-100
+    before:transition-opacity before:duration-300
+    flex items-center justify-center
+    no-underline
+  "
+            >
+              <span
+                class="relative z-10 flex items-center justify-center h-full"
+              >
+                <div
+                  class="w-3 h-3 bg-gradient-to-r from-pink-400 to-cyan-400 rounded-full mr-3 animate-spin"
+                ></div>
+                <span class="text-white font-semibold text-lg">
+                  Dashboard
+                </span>
+              </span>
+
+              <!-- Múltiples efectos de brillo -->
+              <div
+                class="
+      absolute inset-0 opacity-0 group-hover:opacity-100
+      bg-gradient-to-r from-transparent via-white/30 to-transparent
+      transform -skew-x-12 -translate-x-full group-hover:translate-x-full
+      transition-transform duration-1000 ease-out
+    "
+              ></div>
+
+              <!-- Partículas brillantes -->
+              <div
+                class="absolute top-1 right-2 w-1 h-1 bg-cyan-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping"
+              ></div>
+              <div
+                class="absolute bottom-1 left-3 w-1 h-1 bg-pink-400 rounded-full opacity-0 group-hover:opacity-100 animate-ping delay-100"
+              ></div>
+            </a>
           </div>
         {:else}
           <button
