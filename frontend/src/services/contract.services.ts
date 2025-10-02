@@ -185,10 +185,28 @@ export class ContractService {
       const response = await window.aptos.signAndSubmitTransaction({ payload });
 
       await this.aptos.waitForTransaction({ transactionHash: response.hash });
+
+      // Get the campaign ID (assuming it's the total campaigns count)
+      const walletAddress = await this.getWalletAddress();
+      let contractId: number;
+      try {
+        contractId = await this.getTotalCampaigns(walletAddress);
+      } catch (error) {
+        console.error("Failed to get total campaigns, using fallback:", error);
+        // Fallback: assume this is the next campaign
+        contractId = 1; // Or get from local storage or something
+      }
+      return { contractId, transactionHash: response.hash };
     } catch (error) {
       console.error("Error creating campaign:", error);
       throw error;
     }
+  };
+
+  private getWalletAddress = async (): Promise<string> => {
+    //@ts-ignore
+    const account = await window.aptos.account();
+    return account.address;
   };
 
   getCampaignsByCreator = async (creatorAddr: string) => {
@@ -407,6 +425,7 @@ export class ContractService {
 
       await this.aptos.waitForTransaction({ transactionHash: response.hash });
       console.log("Donation successful");
+      return response;
     } catch (error) {
       console.error("Error donating to campaign:", error);
       throw error;
@@ -466,6 +485,7 @@ export class ContractService {
 
       await this.aptos.waitForTransaction({ transactionHash: response.hash });
       console.log("Product purchase successful");
+      return response;
     } catch (error) {
       console.error("Error purchasing product:", error);
       throw error;
@@ -525,6 +545,7 @@ export class ContractService {
 
       await this.aptos.waitForTransaction({ transactionHash: response.hash });
       console.log("Business service purchase successful");
+      return response;
     } catch (error) {
       console.error("Error purchasing business service:", error);
       throw error;

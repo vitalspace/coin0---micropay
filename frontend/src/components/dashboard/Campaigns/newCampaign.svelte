@@ -1,12 +1,15 @@
 <script lang="ts">
   import { useContract } from "@/hooks/useContract";
+  import { useWallet } from "@/hooks/useWallet";
   import { showToast } from "@/stores/toastStore";
+  import { improveCampaign, createCampaign as createCampaignAPI } from "@/services/api.services";
   import {
     ArrowLeft,
     Building2,
     Check,
     Heart,
     ShoppingBag,
+    Sparkles,
     X
   } from "lucide-svelte";
 
@@ -48,14 +51,57 @@
     image: "",
   });
   let isSubmitting = $state(false);
+  let isImprovingName = $state(false);
+  let isImprovingDescription = $state(false);
   let errors = $state<Record<string, string>>({});
 
   // Contract hook
   const { createCampaign } = useContract();
+  const { address } = useWallet();
 
   function selectType(typeId: number) {
     selectedType = typeId;
     errors = {};
+  }
+
+  async function improveName() {
+    if (!formData.name.trim()) return;
+
+    isImprovingName = true;
+    try {
+      const response = await improveCampaign({
+        field: 'name',
+        context: formData.name,
+        currentValue: formData.name,
+      });
+      formData.name = response.data.improvedText;
+      showToast("Campaign name improved!", "success");
+    } catch (error) {
+      console.error("Error improving name:", error);
+      showToast("Failed to improve campaign name", "error");
+    } finally {
+      isImprovingName = false;
+    }
+  }
+
+  async function improveDescription() {
+    if (!formData.description.trim()) return;
+
+    isImprovingDescription = true;
+    try {
+      const response = await improveCampaign({
+        field: 'description',
+        context: formData.description,
+        currentValue: formData.description,
+      });
+      formData.description = response.data.improvedText;
+      showToast("Campaign description improved!", "success");
+    } catch (error) {
+      console.error("Error improving description:", error);
+      showToast("Failed to improve campaign description", "error");
+    } finally {
+      isImprovingDescription = false;
+    }
   }
 
   async function handleSubmit(e: Event) {
@@ -107,8 +153,10 @@
     isSubmitting = true;
 
     try {
+      const campaignType = CAMPAIGN_TYPES[selectedType].name.toLowerCase();
+
       const campaignData = {
-        type: selectedType.toString(),
+        type: campaignType,
         name: formData.name,
         description: formData.description,
         goal: selectedType === 0 ? parseFloat(formData.goal) : 0,
@@ -122,7 +170,7 @@
       const MICRO_APT_MULTIPLIER = 100000000;
 
       const contractArgs = {
-        type: campaignData.type,
+        type: selectedType.toString(), // Contract expects "0", "1", "2"
         name: campaignData.name,
         description: campaignData.description,
         goal: Math.floor(campaignData.goal * MICRO_APT_MULTIPLIER).toString(),
@@ -130,9 +178,9 @@
         image: campaignData.image,
       };
 
-      console.log("Creating campaign:", campaignData);
 
-      await createCampaign(
+      // Create campaign on blockchain
+      const contractResult = await createCampaign(
         contractArgs.type,
         contractArgs.name,
         contractArgs.description,
@@ -140,6 +188,34 @@
         contractArgs.price,
         contractArgs.image
       );
+
+      console.log("Contract result:", contractResult);
+
+      // Get wallet address
+      const userAddress = $address;
+      if (!userAddress) {
+        showToast("Wallet not connected", "error");
+        return;
+      }
+
+      try {
+        // Create campaign in backend database
+        await createCampaignAPI({
+          type: campaignType,
+          name: formData.name,
+          description: formData.description,
+          goal: selectedType === 0 ? parseFloat(formData.goal) : undefined,
+          price: selectedType === 1 || selectedType === 2 ? parseFloat(formData.price) : undefined,
+          image: formData.image,
+          contractId: contractResult.contractId,
+          transaction_hash: contractResult.transactionHash,
+          createdBy: userAddress,
+        });
+      } catch (backendError) {
+        console.error("Failed to create campaign in backend:", backendError);
+        showToast("Campaign created on blockchain but failed to save to database. Please contact support.", "error");
+        return; // Don't reset form or go back
+      }
 
       showToast("Campaign created successfully!", "success");
 
@@ -263,12 +339,28 @@
     <form onsubmit={handleSubmit} class="px-8 pb-8 space-y-6">
       <!-- Campaign Name -->
       <div>
-        <span class="block text-sm font-bold text-gray-800 mb-3">
-          Campaign Name
-          <span class="text-xs text-gray-500 font-normal ml-2"
-            >({formData.name.length}/50)</span
+        <div class="flex items-center justify-between mb-3">
+          <span class="block text-sm font-bold text-gray-800">
+            Campaign Name
+            <span class="text-xs text-gray-500 font-normal ml-2"
+              >({formData.name.length}/50)</span
+            >
+          </span>
+          <button
+            type="button"
+            onclick={improveName}
+            disabled={!formData.name.trim() || isImprovingName}
+            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 disabled:bg-gray-100 disabled:text-gray-400 rounded-lg transition-all disabled:cursor-not-allowed"
           >
-        </span>
+            {#if isImprovingName}
+              <div class="w-3 h-3 border border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+              <span>Improving...</span>
+            {:else}
+              <Sparkles size={12} />
+              <span>Improve with AI</span>
+            {/if}
+          </button>
+        </div>
         <input
           type="text"
           bind:value={formData.name}
@@ -285,12 +377,28 @@
 
       <!-- Description -->
       <div>
-        <span class="block text-sm font-bold text-gray-800 mb-3">
-          Description
-          <span class="text-xs text-gray-500 font-normal ml-2"
-            >({formData.description.length}/256)</span
+        <div class="flex items-center justify-between mb-3">
+          <span class="block text-sm font-bold text-gray-800">
+            Description
+            <span class="text-xs text-gray-500 font-normal ml-2"
+              >({formData.description.length}/256)</span
+            >
+          </span>
+          <button
+            type="button"
+            onclick={improveDescription}
+            disabled={!formData.description.trim() || isImprovingDescription}
+            class="flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 hover:bg-purple-100 disabled:bg-gray-100 disabled:text-gray-400 rounded-lg transition-all disabled:cursor-not-allowed"
           >
-        </span>
+            {#if isImprovingDescription}
+              <div class="w-3 h-3 border border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+              <span>Improving...</span>
+            {:else}
+              <Sparkles size={12} />
+              <span>Improve with AI</span>
+            {/if}
+          </button>
+        </div>
         <textarea
           bind:value={formData.description}
           maxlength="256"

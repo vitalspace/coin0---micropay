@@ -16,3 +16,12 @@ export interface ICampaignData {
   isActive: boolean;
   createdBy: string;
 }
+
+export interface IMemoData {
+  transaction_hash: string;
+  creator_address: string;
+  contractId: number;
+  user_address: string;
+  memo: string;
+  type: 'donation' | 'purchase';
+}

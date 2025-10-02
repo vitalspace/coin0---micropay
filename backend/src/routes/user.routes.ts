@@ -6,21 +6,21 @@ export const userRoutes = new Elysia({
     tags: ["User"],
   },
 })
-  .post("/create-user", createUser, {
+  .post("/api/v1/create-user", createUser, {
     body: t.Object({
       address: t.String({
         minLength: 66,
       }),
     }),
   })
-  .post("/profile", profile, {
+  .post("/api/v1/profile", profile, {
     body: t.Object({
       address: t.String({
         minLength: 66,
       }),
     }),
   })
-  .put("/update-profile", updateProfile, {
+  .put("/api/v1/update-profile", updateProfile, {
     body: t.Object({
       address: t.String({
         minLength: 66,
