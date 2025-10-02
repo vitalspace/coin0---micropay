@@ -333,7 +333,6 @@ export const createMemo = async (ctx: Context) => {
       user_address,
     } = ctx.body as IMemoData;
 
-    // console.log('createMemo received:', { transaction_hash, creator_address, contractId, user_address, memo, type });
 
     if (
       !contractId ||
@@ -421,9 +420,6 @@ export const getCampaignMemos = async (ctx: Context) => {
       ctx.set.status = 404;
       return { message: "Campaign not found" };
     }
-
-    console.log('Fetching memos for campaign with contractId:', campaign.contractId);
-
 
     const skip = (pageNum - 1) * limitNum;
 
