@@ -611,6 +611,62 @@ export class ContractService {
     }
   };
 
+  withdrawAllFunds = async () => {
+    try {
+      const payload = {
+        type: "entry_function_payload",
+        function: `${this.CONTRACT_ADDRESS}::${this.MODULE}::withdraw_all_funds`,
+        type_arguments: [],
+        arguments: [],
+      };
+
+      // Check if wallet is available and connected
+      console.log("Checking wallet availability for withdraw all funds...");
+      //@ts-ignore
+      if (!window.aptos) {
+        console.error("window.aptos is undefined - wallet not found");
+        throw new Error(
+          "Aptos wallet not found. Please install a wallet extension like Petra or Martian."
+        );
+      }
+
+      console.log("Wallet found, checking connection for withdraw all funds...");
+      let isConnected = false;
+      try {
+        //@ts-ignore
+        isConnected = await window.aptos.isConnected();
+        console.log("Wallet connection status for withdraw all funds:", isConnected);
+      } catch (connectionError) {
+        console.error("Error checking wallet connection for withdraw all funds:", connectionError);
+        throw new Error(
+          "Unable to check wallet connection status. Please ensure your wallet is properly installed and connected."
+        );
+      }
+
+      if (!isConnected) {
+        console.log("Wallet not connected, attempting to connect for withdraw all funds...");
+        try {
+          //@ts-ignore
+          await window.aptos.connect();
+          console.log("Wallet connection successful for withdraw all funds");
+        } catch (connectError) {
+          console.error("Error connecting wallet for withdraw all funds:", connectError);
+          throw new Error("Please connect your Aptos wallet to withdraw all funds.");
+        }
+      }
+
+      //@ts-ignore
+      const response = await window.aptos.signAndSubmitTransaction({ payload });
+
+      await this.aptos.waitForTransaction({ transactionHash: response.hash });
+      console.log("Withdraw all funds successful");
+      return response;
+    } catch (error) {
+      console.error("Error withdrawing all funds:", error);
+      throw error;
+    }
+  };
+
   getCampaignProgress = async (userAddr: string, campaignId: number) => {
     try {
       //@ts-ignore

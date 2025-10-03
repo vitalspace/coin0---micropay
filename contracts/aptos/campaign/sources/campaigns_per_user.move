@@ -587,6 +587,42 @@ module campaign_blockchain::campaigns_per_user {
         );
     }
 
+    /// Withdraw all funds from all campaigns (only by campaign creator)
+    public entry fun withdraw_all_funds(campaign_creator: &signer) acquires CampaignStore {
+        let creator_addr = signer::address_of(campaign_creator);
+        let campaign_store = borrow_global_mut<CampaignStore>(creator_addr);
+        let current_time = aptos_framework::timestamp::now_seconds();
+
+        let campaign_id = 1;
+        while (campaign_id < campaign_store.next_campaign_id) {
+            if (campaign_store.campaigns.contains(campaign_id)) {
+                let campaign = campaign_store.campaigns.borrow(campaign_id);
+                // Only withdraw from campaigns created by this user
+                if (campaign.created_by == creator_addr) {
+                    if (campaign_store.campaign_balances.contains(campaign_id)) {
+                        let balance = *campaign_store.campaign_balances.borrow(campaign_id);
+                        if (balance > 0) {
+                            // Emit withdrawal event for each campaign
+                            event::emit_event(
+                                &mut campaign_store.withdrawal_events,
+                                FundsWithdrawn {
+                                    campaign_id,
+                                    withdrawn_by: creator_addr,
+                                    amount: balance,
+                                    withdrawn_at: current_time
+                                }
+                            );
+                            // Set balance to 0
+                            campaign_store.campaign_balances.remove(campaign_id);
+                            campaign_store.campaign_balances.add(campaign_id, 0);
+                        };
+                    };
+                };
+            };
+            campaign_id += 1;
+        };
+    }
+
     // Get campaign balance
     #[view]
     public fun get_campaign_balance(user_addr: address, campaign_id: u64): u64 acquires CampaignStore {

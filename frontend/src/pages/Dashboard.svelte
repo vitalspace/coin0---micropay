@@ -4,15 +4,17 @@
   import Main from "@/components/dashboard/main/Main.svelte";
   import Profile from "@/components/dashboard/profile/Profile.svelte";
   import Sts from "@/components/dashboard/settings/Settings.svelte";
-  import { Briefcase, Folder, Settings, User } from "lucide-svelte";
+  import Messages from "@/components/dashboard/Messages/Messages.svelte";
+  import { Briefcase, Folder, Settings, User, MessageCircle } from "lucide-svelte";
   import { fade } from "svelte/transition";
   import NewCampaign from "@/components/dashboard/Campaigns/newCampaign.svelte";
+  import WalletConnectionGuard from "@/components/ui/WalletConnectionGuard.svelte";
 </script>
+  {#if $showNwewCampaignModal}
+    <NewCampaign onBack={() => showNwewCampaignModal.set(false)} />
+  {/if}
 
-{#if $showNwewCampaignModal}
-  <NewCampaign onBack={() => showNwewCampaignModal.set(false)} />
-{/if}
-
+<WalletConnectionGuard>
 <section class="min-h-screen bg-gradient-to-br from-purple-200 via-teal-50 to-white relative pt-28 pb-10 overflow-x-hidden">
   <!-- Background animated orbs & shapes -->
   <div class="absolute inset-0 pointer-events-none overflow-hidden">
@@ -56,12 +58,13 @@
 
         <!-- Tab navigation -->
         <nav class="bg-white/20 backdrop-blur-sm p-2 rounded-2xl border border-white/20 shadow-sm">
-          <div class="flex flex-wrap gap-2">
+          <div class="flex flex-wrap md:flex-nowrap gap-2">
             {#each [
               { label: 'Main', icon: Folder, index: 0 },
               { label: 'Campaigns', icon: Briefcase, index: 1 },
-              { label: 'Profile', icon: User, index: 2 },
-              { label: 'Settings', icon: Settings, index: 3 }
+              { label: 'Messages', icon: MessageCircle, index: 2 },
+              { label: 'Profile', icon: User, index: 3 },
+              { label: 'Settings', icon: Settings, index: 4 }
             ] as tab}
               <button
                 on:click={() => ($activeTab = tab.index)}
@@ -90,6 +93,8 @@
           {:else if $activeTab === 1}
             <Campaigns />
           {:else if $activeTab === 2}
+            <Messages />
+          {:else if $activeTab === 3}
             <Profile />
           {:else}
             <Sts />
@@ -99,3 +104,4 @@
     </main>
   </div>
 </section>
+</WalletConnectionGuard>

@@ -26,3 +26,11 @@ export interface IMemoData {
   type: 'donation' | 'purchase';
   amount: number; // Amount in octas
 }
+
+export interface IMessageData {
+  sender_address: string;
+  receiver_address: string;
+  campaign_id?: number;
+  message: string;
+  subject?: string;
+}

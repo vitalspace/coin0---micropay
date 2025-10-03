@@ -14,6 +14,7 @@
     DollarSign,
     Heart,
     Link,
+    MessageCircle,
     Package,
     Share,
     ShoppingCart,
@@ -21,6 +22,7 @@
     X,
   } from "lucide-svelte";
   import { onMount } from "svelte";
+  import MessageModal from "@/components/ui/MessageModal.svelte";
 
   const {
     getCampaign,
@@ -52,6 +54,21 @@
   let memos: any[] = [];
   let memosLoading = false;
 
+  // Transaction history
+  let donations: any[] = [];
+  let purchases: any[] = [];
+
+  // Message modal state
+  let showMessageModal = false;
+
+  // Check if user has interacted with this campaign
+  $: hasUserInteracted = campaign && $address ? (
+    // Check donations
+    donations.some(d => d.donor === $address) ||
+    // Check purchases
+    purchases.some(p => p.buyer === $address)
+  ) : false;
+
   const typeMap = ["donation", "business", "product"] as const;
   const OCTAS_TO_APT = 100000000;
 
@@ -77,8 +94,8 @@
       ] = await getCampaign(creatorAddress, campaignId);
 
       const balance = await getCampaignBalance(creatorAddress, campaignId);
-      const donations = await getDonationHistory(creatorAddress, campaignId);
-      const purchases = await getPurchaseHistory(creatorAddress, campaignId);
+      donations = await getDonationHistory(creatorAddress, campaignId);
+      purchases = await getPurchaseHistory(creatorAddress, campaignId);
 
       const totalRaised =
         donations.reduce((sum, d) => sum + Number(d.amount), 0) +
@@ -824,7 +841,7 @@
                 <div
                   class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4"
                 >
-                  <div class="flex items-center gap-2">
+                  <div class="flex items-center gap-2 mb-3">
                     <Heart size={18} class="text-green-600" />
                     <span class="text-green-800 font-semibold text-sm">
                       {#if campaign.type === "donation"}
@@ -834,6 +851,27 @@
                       {/if}
                     </span>
                   </div>
+                  <!-- Contact Creator Button -->
+                  <button
+                    onclick={() => showMessageModal = true}
+                    class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle size={16} />
+                    Contact Creator
+                  </button>
+                </div>
+              {/if}
+
+              <!-- Contact Creator Button (always visible if user has interacted) -->
+              {#if hasUserInteracted && !transactionSuccess}
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+                  <button
+                    onclick={() => showMessageModal = true}
+                    class="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold rounded-lg transition-colors flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle size={16} />
+                    Contact Creator
+                  </button>
                 </div>
               {/if}
 
@@ -1063,3 +1101,11 @@
     {/if}
   </div>
 </div>
+
+<!-- Message Modal -->
+<MessageModal
+  bind:isOpen={showMessageModal}
+  receiverAddress={campaign?.createdBy || ""}
+  campaignId={campaignId}
+  campaignTitle={campaign?.title || ""}
+/>

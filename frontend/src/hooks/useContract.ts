@@ -16,6 +16,7 @@ export const useContract = () => {
   const purchaseProduct = contractService.purchaseProduct.bind(contractService);
   const purchaseBusinessService = contractService.purchaseBusinessService.bind(contractService);
   const withdrawFunds = contractService.withdrawFunds.bind(contractService);
+  const withdrawAllFunds = contractService.withdrawAllFunds.bind(contractService);
   const getCampaignProgress = contractService.getCampaignProgress.bind(contractService);
   const getAllCampaigns = contractService.getAllCampaigns.bind(contractService);
   const getTotalBalance = contractService.getTotalBalance.bind(contractService);
@@ -36,6 +37,7 @@ export const useContract = () => {
     purchaseProduct,
     purchaseBusinessService,
     withdrawFunds,
+    withdrawAllFunds,
     getCampaignProgress,
     getAllCampaigns,
     getTotalBalance,

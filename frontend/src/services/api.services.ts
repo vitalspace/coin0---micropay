@@ -85,3 +85,42 @@ export const improveCampaign = async (body: {
 }) => {
   return await axios.post('/api/v1/improve-campaign', body);
 };
+
+// Message APIs
+export const createMessage = async (body: {
+  sender_address: string;
+  receiver_address: string;
+  campaign_id?: number;
+  message: string;
+  subject?: string;
+}) => {
+  return await axios.post('/api/v1/messages', body);
+};
+
+export const getUserMessages = async (
+  address: string,
+  params?: {
+    page?: number;
+    limit?: number;
+  }
+) => {
+  const response = await axios.get('/api/v1/messages/user', {
+    params: { address, ...params }
+  });
+  return response.data;
+};
+
+export const getConversation = async (
+  userAddress: string,
+  otherAddress: string,
+  params?: {
+    page?: number;
+    limit?: number;
+    campaign_id?: number;
+  }
+) => {
+  const response = await axios.get(`/api/v1/messages/conversation/${userAddress}/${otherAddress}`, {
+    params
+  });
+  return response.data;
+};

@@ -27,6 +27,31 @@ interface IMemo extends Document {
   user_address: string;
 }
 
+interface IConversation extends Document {
+  participants: [string, string]; // Sorted array of two addresses
+  campaign_id: number | null; // Campaign ID for per-campaign conversations
+  messages: Array<{
+    sender_address: string;
+    receiver_address: string;
+    message: string;
+    subject?: string; // Subject for contextual information
+    createdAt: Date;
+    updatedAt: Date;
+    isRead: boolean;
+    campaign_id?: number; // Optional, for campaign-related messages
+  }>;
+  lastMessageAt: Date;
+}
+
+interface IMessage extends Document {
+  sender_address: string;
+  receiver_address: string;
+  campaign_id?: number; // Optional, for campaign-related messages
+  message: string;
+  subject?: string; // Subject for contextual information
+  isRead: boolean;
+}
+
 const CampaignSchema: Schema = new Schema(
   {
     type: {
@@ -61,7 +86,52 @@ const MemoSchema: Schema = new Schema(
   { timestamps: true }
 );
 
+const ConversationSchema: Schema = new Schema(
+  {
+    participants: {
+      type: [String],
+      required: true,
+      validate: {
+        validator: function(arr: string[]) {
+          return arr.length === 2 && arr[0] < arr[1]; // Ensure sorted and unique
+        },
+        message: 'Participants must be exactly two unique addresses, sorted alphabetically.'
+      }
+    },
+    campaign_id: { type: Number, default: null }, // Campaign ID for per-campaign conversations
+    messages: [{
+      sender_address: { type: String, required: true },
+      receiver_address: { type: String, required: true },
+      message: { type: String, required: true, maxlength: 1000 },
+      subject: { type: String }, // Subject for contextual information
+      createdAt: { type: Date, default: Date.now },
+      updatedAt: { type: Date, default: Date.now },
+      isRead: { type: Boolean, required: true, default: false },
+      campaign_id: { type: Number }, // Optional, for campaign-related messages
+    }],
+    lastMessageAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
+// Compound index for unique conversations per campaign
+ConversationSchema.index({ participants: 1, campaign_id: 1 }, { unique: true });
+
+const MessageSchema: Schema = new Schema(
+  {
+    sender_address: { type: String, required: true },
+    receiver_address: { type: String, required: true },
+    campaign_id: { type: Number }, // Optional, for campaign-related messages
+    message: { type: String, required: true, maxlength: 1000 },
+    subject: { type: String }, // Subject for contextual information
+    isRead: { type: Boolean, required: true, default: false },
+  },
+  { timestamps: true }
+);
+
 const Campaign = mongoose.model<ICampaign>("Campaign", CampaignSchema);
 const Memo = mongoose.model<IMemo>("Memo", MemoSchema);
+const Conversation = mongoose.model<IConversation>("Conversation", ConversationSchema);
+const Message = mongoose.model<IMessage>("Message", MessageSchema);
 
-export { Campaign as default, Memo };
+export { Campaign as default, Memo, Conversation, Message };

@@ -49,8 +49,21 @@ export interface Campaign {
   balance: number;
   totalRaised: number;
   supporterCount: number;
+  donorCount: number; // Number of unique donors/supporters
   isActive: boolean;
   createdBy?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Message {
+  _id: string;
+  sender_address: string;
+  receiver_address: string;
+  campaign_id?: number;
+  message: string;
+  subject?: string;
+  isRead: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

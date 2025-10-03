@@ -4,7 +4,8 @@
   import { MoveUpRight, Send, Wallet } from "lucide-svelte";
 
   let balance = $state(0n);
-  const { getTotalBalance } = useContract();
+  let isWithdrawing = $state(false);
+  const { getTotalBalance, withdrawAllFunds } = useContract();
   const { address } = useWallet();
 
   const userAddress = $derived($address);
@@ -19,6 +20,18 @@
       console.log("Total Balance:", balance);
     } catch (error) {
       console.error("Error fetching balance:", error);
+    }
+  };
+
+  const handleWithdrawAll = async () => {
+    isWithdrawing = true;
+    try {
+      await withdrawAllFunds();
+      await init(); // Refresh balance after withdrawal
+    } catch (error) {
+      console.error("Error withdrawing all funds:", error);
+    } finally {
+      isWithdrawing = false;
     }
   };
 
@@ -52,10 +65,12 @@
 
   <div class="flex flex-col items-end space-y-2">
     <button
-      class="bg-white/30 hover:bg-white/50 cursor-pointer text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-3 transition duration-300 shadow-md hover:shadow-lg"
+      class="bg-white/30 hover:bg-white/50 cursor-pointer text-white px-6 py-3 rounded-xl font-semibold flex items-center space-x-3 transition duration-300 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+      onclick={handleWithdrawAll}
+      disabled={isWithdrawing}
     >
       <Send class="h-5 w-5" />
-      <span>Withdraw</span>
+      <span>{isWithdrawing ? "Withdrawing..." : "Withdraw"}</span>
     </button>
     <p class="text-sm text-white/80 italic font-medium select-none">instant deposit</p>
   </div>
