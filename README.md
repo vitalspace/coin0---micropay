@@ -1,3 +1,5 @@
+<img width="1902" height="893" alt="Screenshot_2" src="https://github.com/user-attachments/assets/0710c418-e67f-48d4-90c5-a01f4e61e991" />
+
 # MicroPay
 
 MicroPay is a decentralized crowdfunding and micropayment platform built on blockchain technology. It enables users to create and support campaigns for donations, businesses, and products on the Aptos blockchain, with additional swap functionality on Ethereum for secure, transparent transactions. Featuring AI-powered tools for campaign optimization and a comprehensive messaging system for user interactions.
