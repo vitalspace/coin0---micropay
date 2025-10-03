@@ -1,16 +1,19 @@
 # MicroPay
 
-MicroPay is a decentralized crowdfunding and campaign platform built on blockchain technology. It enables users to create and support campaigns for donations, businesses, and products on the Aptos blockchain, with additional swap functionality on Ethereum for secure, transparent transactions.
+MicroPay is a decentralized crowdfunding and micropayment platform built on blockchain technology. It enables users to create and support campaigns for donations, businesses, and products on the Aptos blockchain, with additional swap functionality on Ethereum for secure, transparent transactions. Featuring AI-powered tools for campaign optimization and a comprehensive messaging system for user interactions.
 
 ## Features
 
-- **Campaign Management**: Create and manage different types of campaigns (donations, business, product)
+- **Campaign Management**: Create and manage different types of campaigns (donations, business, product) with memos and notes
+- **AI-Powered Campaign Enhancement**: Improve campaign titles and descriptions using AI assistance for better engagement
 - **User Profiles**: Personalized profiles with avatars, bios, and analytics
 - **Dashboard**: Comprehensive dashboard for campaign creators with analytics, donor lists, and withdrawal options
 - **Wallet Integration**: Connect Aptos wallets for seamless blockchain interactions
 - **3D Visualizations**: Interactive 3D wallet models and charts using Threlte
-- **Real-time Analytics**: Income charts, donor rankings, and campaign performance metrics
-- **Swap Functionality**: Integrated token swapping capabilities (currently commented out)
+- **Real-time Analytics**: Income charts, donor rankings, and campaign performance metrics with AI-driven insights
+- **Messaging System**: In-app messaging for users to communicate about campaigns and collaborations
+- **Withdrawal Management**: Easy and secure withdrawal of campaign funds for creators
+- **Swap Functionality**: Integrated token swapping capabilities between Aptos and Ethereum/BSC
 - **Responsive Design**: Mobile-friendly interface built with Tailwind CSS
 
 ## Tech Stack
@@ -122,16 +125,32 @@ No additional environment variables required for development.
 2. **Start the frontend**: `cd frontend && bun run dev`
 3. **Open your browser**: Navigate to `http://localhost:5173`
 4. **Connect wallet**: Use the wallet integration to connect your Aptos wallet
-5. **Create campaigns**: Access the dashboard to create and manage campaigns
+5. **Create campaigns**: Access the dashboard to create and manage campaigns with AI-powered enhancements
 6. **Support campaigns**: Browse and donate to campaigns on the platform
+7. **Manage funds**: Use the dashboard to withdraw campaign funds securely
+8. **Communicate**: Send messages to other users about campaigns and collaborations
+9. **Swap tokens**: Use the integrated swap functionality for cross-chain token exchanges
 
 ## API Endpoints
 
+### User Management
 - `GET /api/v1/users/:address` - Get user profile
 - `POST /api/v1/users` - Create/update user profile
+
+### Campaign Management
 - `GET /api/v1/campaigns` - Get all campaigns
 - `POST /api/v1/campaigns` - Create new campaign
 - `GET /api/v1/campaigns/:id` - Get campaign details
+- `GET /api/v1/user/campaigns` - Get user's campaigns
+- `GET /api/v1/campaign-contract` - Get campaign by contract ID
+- `GET /api/v1/campaign/:id/memos` - Get campaign memos
+- `POST /api/v1/create-memo` - Create campaign memo
+- `POST /api/v1/improve-campaign` - AI-powered campaign improvement
+
+### Messaging
+- `POST /api/v1/messages` - Send message
+- `GET /api/v1/messages/user` - Get user messages
+- `GET /api/v1/messages/conversation/:user1/:user2` - Get conversation between users
 
 ## Testing
 
