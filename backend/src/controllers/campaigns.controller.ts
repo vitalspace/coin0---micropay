@@ -396,6 +396,7 @@ export const createMemo = async (ctx: Context) => {
       transaction_hash,
       type,
       user_address,
+      amount,
     });
     await newMemo.save();
 
@@ -811,6 +812,205 @@ export const improveCampaign = async (ctx: Context) => {
     }
 
     return { improvedText };
+  } catch (error) {
+    ctx.set.status = 500;
+    return { message: "Internal server error", error };
+  }
+};
+
+export const getAnalytics = async (ctx: Context) => {
+  try {
+    const { address } = ctx.query as { address: string };
+
+    if (!address) {
+      ctx.set.status = 400;
+      return { message: "User address is required" };
+    }
+
+    // Find user by address
+    const user = await User.findOne({ address });
+    if (!user) {
+      ctx.set.status = 404;
+      return { message: "User not found" };
+    }
+
+    // Get user's campaigns
+    const campaigns = await Campaign.find({ createdBy: user._id });
+
+    // Aggregate data from memos (transactions)
+    const memos = await Memo.find({
+      campaign_id: { $in: campaigns.map(c => c.contractId) }
+    }).sort({ createdAt: -1 });
+
+    // Calculate daily income
+    const dailyIncomeMap = new Map<string, number>();
+    memos.forEach(memo => {
+      const date = memo.createdAt.toISOString().split('T')[0];
+      const amount = memo.amount / 100000000; // Convert octas to APT
+      dailyIncomeMap.set(date, (dailyIncomeMap.get(date) || 0) + amount);
+    });
+
+    let dailyIncome = Array.from(dailyIncomeMap.entries())
+      .map(([date, amount]) => ({ date, amount }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    // Calculate weekly income
+    const weeklyIncomeMap = new Map<string, number>();
+    memos.forEach(memo => {
+      const date = new Date(memo.createdAt);
+      const weekStart = new Date(date);
+      weekStart.setDate(date.getDate() - date.getDay());
+      const weekKey = weekStart.toISOString().split('T')[0];
+      const amount = memo.amount / 100000000;
+      weeklyIncomeMap.set(weekKey, (weeklyIncomeMap.get(weekKey) || 0) + amount);
+    });
+
+    let weeklyIncome = Array.from(weeklyIncomeMap.entries())
+      .map(([week, amount]) => ({ week: `Week of ${week}`, amount }))
+      .sort((a, b) => a.week.localeCompare(b.week));
+
+    // Calculate top donors
+    const donorMap = new Map<string, { totalAmount: number; paymentCount: number }>();
+    memos.forEach(memo => {
+      const amount = memo.amount / 100000000;
+      const existing = donorMap.get(memo.user_address) || { totalAmount: 0, paymentCount: 0 };
+      donorMap.set(memo.user_address, {
+        totalAmount: existing.totalAmount + amount,
+        paymentCount: existing.paymentCount + 1
+      });
+    });
+
+    let donorRanking = Array.from(donorMap.entries())
+      .map(([address, data]) => ({
+        address: address.slice(0, 10) + '...',
+        totalAmount: data.totalAmount,
+        paymentCount: data.paymentCount
+      }))
+      .sort((a, b) => b.totalAmount - a.totalAmount)
+      .slice(0, 10); // Top 10 donors
+
+    // If no real data, provide sample data for demonstration
+    if (campaigns.length === 0) {
+      // Sample campaigns data
+      const sampleCampaigns = [
+        { name: "Support My Art", totalRaised: 25.5, supporterCount: 8, isActive: true },
+        { name: "Coffee Shop Tips", totalRaised: 15.2, supporterCount: 12, isActive: true },
+        { name: "Digital Art Pack", totalRaised: 45.8, supporterCount: 5, isActive: false }
+      ];
+
+      // Generate sample daily income for the last 7 days
+      dailyIncome = [];
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const amount = Math.random() * 10 + 2; // Random amount between 2-12 APT
+        dailyIncome.push({
+          date: date.toISOString().split('T')[0],
+          amount: Math.round(amount * 100) / 100
+        });
+      }
+
+      // Generate sample weekly income
+      weeklyIncome = [
+        { week: "Week of 2025-09-23", amount: 45.2 },
+        { week: "Week of 2025-09-30", amount: 62.8 },
+        { week: "Week of 2025-10-07", amount: 38.9 }
+      ];
+
+      // Generate sample donor ranking
+      donorRanking = [
+        { address: "0x1234...abcd", totalAmount: 25.5, paymentCount: 3 },
+        { address: "0x5678...efgh", totalAmount: 18.2, paymentCount: 2 },
+        { address: "0x9abc...ijkl", totalAmount: 12.8, paymentCount: 1 },
+        { address: "0xdef0...mnop", totalAmount: 8.9, paymentCount: 1 }
+      ];
+    }
+
+    // Mock traffic sources (could be implemented with real tracking later)
+    const trafficSources = [
+      { source: "Direct", visits: Math.floor(Math.random() * 100) + 50 },
+      { source: "Twitter", visits: Math.floor(Math.random() * 80) + 20 },
+      { source: "Discord", visits: Math.floor(Math.random() * 60) + 10 },
+      { source: "Other", visits: Math.floor(Math.random() * 40) + 5 }
+    ];
+
+    return {
+      dailyIncome,
+      weeklyIncome,
+      donorRanking,
+      trafficSources
+    };
+  } catch (error) {
+    ctx.set.status = 500;
+    return { message: "Internal server error", error };
+  }
+};
+
+export const analyzeCampaigns = async (ctx: Context) => {
+  try {
+    const { campaigns, analytics, userAddress } = ctx.body as {
+      campaigns: any[];
+      analytics: any;
+      userAddress: string;
+    };
+
+    if (!campaigns || !analytics || !userAddress) {
+      ctx.set.status = 400;
+      return { message: "Missing required fields: campaigns, analytics, userAddress" };
+    }
+
+    const cerebras = new Cerebras({
+      apiKey: process.env["CEREBRAS_API_KEY"],
+    });
+
+    // Prepare data summary for AI analysis
+    const summary = {
+      totalCampaigns: campaigns.length,
+      activeCampaigns: campaigns.filter(c => c.isActive).length,
+      totalRaised: campaigns.reduce((sum, c) => sum + c.totalRaised, 0),
+      totalSupporters: campaigns.reduce((sum, c) => sum + c.supporterCount, 0),
+      topDonors: analytics.donorRanking?.slice(0, 5) || [],
+      recentIncome: analytics.dailyIncome?.slice(-7) || [],
+      campaignTypes: campaigns.reduce((acc, c) => {
+        acc[c.type] = (acc[c.type] || 0) + 1;
+        return acc;
+      }, {} as Record<string, number>)
+    };
+
+    const stream = await cerebras.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert campaign analyst. Analyze the provided campaign data and provide actionable insights, recommendations, and performance analysis in HTML format using Tailwind CSS classes. All amounts are in APT (Aptos cryptocurrency). Use dark theme classes like text-gray-300 for body text, text-white for headings, bg-slate-800/50 for sections, border-cyan-500/20 for borders, etc. Focus on:
+          - Overall performance trends
+          - Campaign effectiveness by type
+          - Donor behavior patterns
+          - Recommendations for improvement
+          - Growth opportunities
+          Keep the analysis concise but comprehensive, around 300-500 words. Return only the HTML body content without DOCTYPE, html, head, or body tags - just the inner HTML elements with Tailwind classes.`,
+        },
+        {
+          role: "user",
+          content: `Campaign Analytics Summary:
+${JSON.stringify(summary, null, 2)}
+
+Please provide a detailed analysis of this campaign data in HTML format.`,
+        },
+      ],
+      model: "gpt-oss-120b",
+      stream: true,
+      max_completion_tokens: 65536,
+      temperature: 0.7,
+      top_p: 1,
+      reasoning_effort: "medium",
+    });
+
+    let analysis = "";
+    for await (const chunk of stream) {
+      analysis += (chunk as any).choices[0]?.delta?.content || "";
+    }
+
+    return { analysis };
   } catch (error) {
     ctx.set.status = 500;
     return { message: "Internal server error", error };

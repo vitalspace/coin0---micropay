@@ -1,4 +1,5 @@
 import axios from "@services/axios";
+import type { Campaign, AnalyticsData } from "@/types/types";
 
 // User APIs
 export const profile = async (body: any) => await axios.post("/api/v1/profile", body);
@@ -123,4 +124,13 @@ export const getConversation = async (
     params
   });
   return response.data;
+};
+
+export const getAnalytics = async (address: string) => {
+  return await axios.get('/api/v1/analytics', { params: { address } });
+};
+
+export const generateAIAnalysis = async (campaigns: Campaign[], analyticsData: AnalyticsData, address: string): Promise<string> => {
+  const response = await axios.post('/api/v1/analytics/analyze', { campaigns, analytics: analyticsData, userAddress: address });
+  return response.data.analysis;
 };

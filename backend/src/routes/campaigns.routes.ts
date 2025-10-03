@@ -11,6 +11,8 @@ import {
   getUserMessages,
   getConversation,
   improveCampaign,
+  getAnalytics,
+  analyzeCampaigns,
 } from "../controllers/campaigns.controller";
 
 export const campaignRoutes = new Elysia({
@@ -188,5 +190,21 @@ export const campaignRoutes = new Elysia({
         minLength: 1,
       }),
       currentValue: t.Optional(t.String()),
+    }),
+  })
+  .get("/api/v1/analytics", getAnalytics, {
+    query: t.Object({
+      address: t.String({
+        minLength: 1,
+      }),
+    }),
+  })
+  .post("/api/v1/analytics/analyze", analyzeCampaigns, {
+    body: t.Object({
+      campaigns: t.Array(t.Any()),
+      analytics: t.Any(),
+      userAddress: t.String({
+        minLength: 1,
+      }),
     }),
   });

@@ -5,7 +5,8 @@
   import Profile from "@/components/dashboard/profile/Profile.svelte";
   import Sts from "@/components/dashboard/settings/Settings.svelte";
   import Messages from "@/components/dashboard/Messages/Messages.svelte";
-  import { Briefcase, Folder, Settings, User, MessageCircle } from "lucide-svelte";
+  import Analytics from "@/components/dashboard/analytics/Analytics.svelte";
+  import { Briefcase, Folder, Settings, User, MessageCircle, BarChart3 } from "lucide-svelte";
   import { fade } from "svelte/transition";
   import NewCampaign from "@/components/dashboard/Campaigns/newCampaign.svelte";
   import WalletConnectionGuard from "@/components/ui/WalletConnectionGuard.svelte";
@@ -63,8 +64,9 @@
               { label: 'Main', icon: Folder, index: 0 },
               { label: 'Campaigns', icon: Briefcase, index: 1 },
               { label: 'Messages', icon: MessageCircle, index: 2 },
-              { label: 'Profile', icon: User, index: 3 },
-              { label: 'Settings', icon: Settings, index: 4 }
+              { label: 'Analytics', icon: BarChart3, index: 3 },
+              { label: 'Profile', icon: User, index: 4 },
+              { label: 'Settings', icon: Settings, index: 5 }
             ] as tab}
               <button
                 on:click={() => ($activeTab = tab.index)}
@@ -95,6 +97,8 @@
           {:else if $activeTab === 2}
             <Messages />
           {:else if $activeTab === 3}
+            <Analytics />
+          {:else if $activeTab === 4}
             <Profile />
           {:else}
             <Sts />

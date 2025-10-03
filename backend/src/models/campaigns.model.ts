@@ -25,6 +25,9 @@ interface IMemo extends Document {
   transaction_hash: string;
   type: "donation" | "purchase";
   user_address: string;
+  amount: number; // Amount in octas
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface IConversation extends Document {
@@ -82,6 +85,7 @@ const MemoSchema: Schema = new Schema(
     transaction_hash: { type: String, required: true, unique: true },
     type: { type: String, required: true, enum: ["donation", "purchase"] },
     user_address: { type: String, required: true },
+    amount: { type: Number, required: true }, // Amount in octas
   },
   { timestamps: true }
 );
