@@ -192,25 +192,27 @@
             <div
               class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mx-auto mb-6 shadow-lg shadow-purple-400/30 group-hover:scale-110 transition-transform duration-300"
             >
-              <Link size={32} color="white" />
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
             </div>
             <h3
               class="text-purple-400 text-xl font-semibold mb-4 group-hover:text-purple-300 transition-colors"
             >
-              Create Payment Link
+              Create Your Campaign
             </h3>
             <p class="text-slate-300 leading-relaxed mb-6">
-              Generate a unique payment link or QR code that others can use to
-              send you micropayments.
+              Choose from donation, service, or product campaigns. Set your goals,
+              pricing, and details with AI assistance.
             </p>
             <div class="flex flex-wrap justify-center gap-2">
               <span
                 class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm"
-                >Easy</span
+                >Flexible</span
               >
               <span
                 class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm"
-                >Shareable</span
+                >AI-Powered</span
               >
             </div>
           </div>
@@ -219,7 +221,7 @@
 
       <!-- Step 3 -->
       <div
-        class="animate-fadeInUp flex flex-col items-center text-center md:col-span-2 lg:col-span-1 md:col-start-1 lg:col-start-auto md:justify-self-center lg:justify-self-auto"
+        class="animate-fadeInUp flex flex-col items-center text-center"
         style="animation-delay: 0.9s"
       >
         <div
@@ -252,25 +254,27 @@
             <div
               class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-400 to-green-500 rounded-2xl mx-auto mb-6 shadow-lg shadow-emerald-400/30 group-hover:scale-110 transition-transform duration-300"
             >
-              <CheckCircle size={32} color="white" />
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
             </div>
             <h3
               class="text-emerald-400 text-xl font-semibold mb-4 group-hover:text-emerald-300 transition-colors"
             >
-              Receive Payments
+              Launch & Manage
             </h3>
             <p class="text-slate-300 leading-relaxed mb-6">
-              Accept instant micropayments with near-zero fees. Track all
-              transactions in your dashboard.
+              Launch your campaign and start receiving payments. Monitor performance
+              with real-time analytics and withdraw funds anytime.
             </p>
             <div class="flex flex-wrap justify-center gap-2">
               <span
                 class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm"
-                >Instant</span
+                >Analytics</span
               >
               <span
                 class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm"
-                >Low Fees</span
+                >Withdraw</span
               >
             </div>
           </div>

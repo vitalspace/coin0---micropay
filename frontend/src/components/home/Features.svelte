@@ -43,10 +43,6 @@
    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 place-items-center">
      <!-- Feature 1 -->
      <div class="animate-fadeInUp flex flex-col items-center text-center" style="animation-delay: 0.3s">
-       <div class="px-6 py-2 bg-transparent border-2 border-cyan-400 text-cyan-400 text-xl font-bold mb-6 shadow-lg shadow-cyan-400/20 animate-scaleIn backdrop-blur-sm"
-            style="animation-delay: 0.5s; border-radius: 20px;">
-         01
-       </div>
        <div class="relative bg-gradient-to-br from-slate-800/70 via-slate-800/50 to-slate-900/70 backdrop-blur-md p-8 border border-cyan-500/20 hover:border-cyan-400/40 hover:shadow-2xl hover:shadow-cyan-400/10 transition-all duration-500 hover:-translate-y-3 w-full max-w-sm overflow-hidden group">
          <!-- Background Pattern -->
          <div class="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -59,18 +55,19 @@
          <div class="relative z-10">
            <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-2xl mx-auto mb-6 shadow-lg shadow-cyan-400/30 group-hover:scale-110 transition-transform duration-300">
              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
              </svg>
            </div>
            <h3 class="text-cyan-400 text-xl font-semibold mb-4 group-hover:text-cyan-300 transition-colors">
-             Lightning Fast
+             Versatile Campaign Creation
            </h3>
            <p class="text-slate-300 leading-relaxed mb-6">
-             Experience near-instantaneous transactions with sub-second confirmation times on the Aptos blockchain.
+             Create campaigns for donations, services, or products with our flexible platform and AI-powered tools.
            </p>
            <div class="flex flex-wrap justify-center gap-2">
-             <span class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm">Sub-1s</span>
-             <span class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm">Instant</span>
+             <span class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm">Donations</span>
+             <span class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm">Services</span>
+             <span class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm">Products</span>
            </div>
          </div>
        </div>
@@ -78,10 +75,7 @@
 
      <!-- Feature 2 -->
      <div class="animate-fadeInUp flex flex-col items-center text-center" style="animation-delay: 0.6s">
-       <div class="px-6 py-2 bg-transparent border-2 border-purple-400 text-purple-400 text-xl font-bold mb-6 shadow-lg shadow-purple-400/20 animate-scaleIn backdrop-blur-sm"
-            style="animation-delay: 0.8s; border-radius: 20px;">
-         02
-       </div>
+
        <div class="relative bg-gradient-to-br from-slate-800/70 via-slate-800/50 to-slate-900/70 backdrop-blur-md p-8 border border-purple-500/20 hover:border-purple-400/40 hover:shadow-2xl hover:shadow-purple-400/10 transition-all duration-500 hover:-translate-y-3 w-full max-w-sm overflow-hidden group">
          <!-- Background Pattern -->
          <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -98,26 +92,21 @@
              </svg>
            </div>
            <h3 class="text-purple-400 text-xl font-semibold mb-4 group-hover:text-purple-300 transition-colors">
-             Ultra Secure
+             Secure Blockchain Payments
            </h3>
            <p class="text-slate-300 leading-relaxed mb-6">
-             Built on battle-tested Aptos blockchain with military-grade security protocols and stablecoin support.
+             Process payments securely on the Aptos blockchain with instant confirmations and multi-currency support.
            </p>
            <div class="flex flex-wrap justify-center gap-2">
-             <span class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm">USDC</span>
-             <span class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm">USDT</span>
+             <span class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm">APT</span>
            </div>
          </div>
        </div>
      </div>
 
      <!-- Feature 3 -->
-     <div class="animate-fadeInUp flex flex-col items-center text-center md:col-span-2 lg:col-span-1 md:col-start-1 lg:col-start-auto md:justify-self-center lg:justify-self-auto"
-          style="animation-delay: 0.9s">
-       <div class="px-6 py-2 bg-transparent border-2 border-emerald-400 text-emerald-400 text-xl font-bold mb-6 shadow-lg shadow-emerald-400/20 animate-scaleIn backdrop-blur-sm"
-            style="animation-delay: 1.1s; border-radius: 20px;">
-         03
-       </div>
+     <div class="animate-fadeInUp flex flex-col items-center text-center" style="animation-delay: 0.9s">
+
        <div class="relative bg-gradient-to-br from-slate-800/70 via-slate-800/50 to-slate-900/70 backdrop-blur-md p-8 border border-emerald-500/20 hover:border-emerald-400/40 hover:shadow-2xl hover:shadow-emerald-400/10 transition-all duration-500 hover:-translate-y-3 w-full max-w-sm overflow-hidden group">
          <!-- Background Pattern -->
          <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -134,14 +123,14 @@
              </svg>
            </div>
            <h3 class="text-emerald-400 text-xl font-semibold mb-4 group-hover:text-emerald-300 transition-colors">
-             Zero Fees
+             Real-time Analytics
            </h3>
            <p class="text-slate-300 leading-relaxed mb-6">
-             Advanced analytics dashboard with real-time insights and comprehensive reporting at near-zero cost.
+             Track campaign performance with comprehensive analytics, participant insights, and real-time reporting.
            </p>
            <div class="flex flex-wrap justify-center gap-2">
              <span class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm">Analytics</span>
-             <span class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm">~0 Fees</span>
+             <span class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm">Real-time</span>
            </div>
          </div>
        </div>

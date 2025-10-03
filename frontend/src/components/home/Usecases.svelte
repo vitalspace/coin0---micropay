@@ -124,20 +124,20 @@
             <h3
               class="text-cyan-400 text-xl font-semibold mb-4 group-hover:text-cyan-300 transition-colors"
             >
-              Content Creators
+              Charity & Fundraising
             </h3>
             <p class="text-slate-300 leading-relaxed mb-6">
-              Get tips and donations instantly from your audience with real-time
-              micropayments on the Aptos blockchain.
+              Launch donation campaigns for causes you care about with transparent
+              tracking and instant blockchain settlements.
             </p>
             <div class="flex flex-wrap justify-center gap-2">
               <span
                 class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm"
-                >Tips</span
+                >Fundraising</span
               >
               <span
                 class="bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 px-3 py-1 rounded-full text-xs font-medium border border-cyan-500/30 backdrop-blur-sm"
-                >Donations</span
+                >Charity</span
               >
             </div>
           </div>
@@ -182,36 +182,36 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                  d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0V8a2 2 0 01-2 2H8a2 2 0 01-2-2V6m8 0H8"
                 ></path>
               </svg>
             </div>
             <h3
               class="text-purple-400 text-xl font-semibold mb-4 group-hover:text-purple-300 transition-colors"
             >
-              Local Stores
+              Freelancers & Services
             </h3>
             <p class="text-slate-300 leading-relaxed mb-6">
-              Accept small QR payments on the go with instant settlement and
-              zero fees for seamless transactions.
+              Offer professional services and accept payments securely through
+              blockchain-based campaigns with transparent pricing.
             </p>
             <div class="flex flex-wrap justify-center gap-2">
               <span
                 class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm"
-                >QR Codes</span
+                >Services</span
               >
               <span
                 class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-400 px-3 py-1 rounded-full text-xs font-medium border border-purple-500/30 backdrop-blur-sm"
-                >Mobile Pay</span
+                >Freelancers</span
               >
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Apps & Games Card -->
+      <!-- E-commerce & Products Card -->
       <div
-        class="animate-fadeInUp flex flex-col items-center text-center md:col-span-2 lg:col-span-1 md:col-start-1 lg:col-start-auto md:justify-self-center lg:justify-self-auto"
+        class="animate-fadeInUp flex flex-col items-center text-center"
         style="animation-delay: 0.9s"
       >
         <div
@@ -247,27 +247,27 @@
                   stroke-linecap="round"
                   stroke-linejoin="round"
                   stroke-width="2"
-                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                 ></path>
               </svg>
             </div>
             <h3
               class="text-emerald-400 text-xl font-semibold mb-4 group-hover:text-emerald-300 transition-colors"
             >
-              Apps & Games
+              E-commerce & Products
             </h3>
             <p class="text-slate-300 leading-relaxed mb-6">
-              Enable in-app micro purchases with stablecoins and seamless user
-              experience for gaming and apps.
+              Sell digital or physical products through secure campaigns with
+              transparent pricing and instant blockchain payments.
             </p>
             <div class="flex flex-wrap justify-center gap-2">
               <span
                 class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm"
-                >In-App</span
+                >E-commerce</span
               >
               <span
                 class="bg-gradient-to-r from-emerald-500/10 to-green-500/10 text-emerald-400 px-3 py-1 rounded-full text-xs font-medium border border-emerald-500/30 backdrop-blur-sm"
-                >Gaming</span
+                >Products</span
               >
             </div>
           </div>
